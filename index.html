@@ -10,8 +10,8 @@
 <script>
 
 
-    var width = d3.select("#background").node().clientWidth,
-        height = d3.select("#background").node().clientHeight;
+    var width = d3.select("background").node().clientWidth,
+        height = d3.select("background").node().clientHeight;
 
     var nodes = d3.range(200).map(function() { return {radius: Math.random() * 12 + 4}; }),
         root = nodes[0];
@@ -27,7 +27,7 @@
 
     force.start();
 
-    var canvas = d3.select("#background").append("canvas")
+    var canvas = d3.select("background").append("canvas")
         .attr("width", width)
         .attr("height", height);
 
