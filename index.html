@@ -1,110 +1,189 @@
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
 <head>
-        <!-- Home Page CSS -->
-        <link rel="stylesheet" type="text/css" href="css/home.css">
+    <title>Oops! Sorry!</title>
+    <!-- Home Page CSS -->
+    <link rel="stylesheet" type="text/css" href="css/mycss.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Assistant:300,400,600,700" rel="stylesheet">
+    <!-- Full Page CSS -->
+    <link rel="stylesheet" type="text/css" href="css/jquery.fullpage.css" />
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+    <link rel="icon" href="img/icon.png">
+    <!--Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- Full Page -->
+    <script src="js/jquery.fullpage.js"></script>
+
+
+    <!-- Full Page Setup -->
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#fullpage').fullpage({
+            anchors: ['firstPage', 'secondPage', '3rdPage', '4thPage'],
+            menu: '#menu',
+            afterSlideLoad: function(anchorLink, index, slideAnchor, slideIndex) {
+                $('.menu-sub li.active').removeClass('active');
+                $('.menu-sub li').eq(slideIndex).addClass('active');
+            }
+
+        });
+
+
+    $('.scroll-down').show("fade");
+    $('.scroll-down').fadeIn(1000).fadeOut(1000).fadeIn(1000).fadeOut(1000).fadeIn(1000);
+
+    });
+    </script>
 </head>
 <body>
 
-<section style="height:100vh; width:100vw;" id="background">
-    <script src="d3/d3.min.js"></script>
-    <script>
-    //Home Page Graphic
-    //adapted from https://bl.ocks.org/mbostock/3231307
+<div id="background"></div>
 
-    var width = d3.select("#background").node().clientWidth,
-        height = d3.select("#background").node().clientHeight;
+<div class="content" id="fullpage">
+    <div class="section " id="section0 ">
+        <div class="section-wrapper">
+            <div class="intro">
+                <h1>Sorry!</h1>
+                <p >Project is still in construction. You can browse my github or other social links (scroll-down) instead.</p>
+                <p>Or play with these cute balls!!</p>
+              
+                <a href="https://mmbajo.github.io/home/">
+                    <div class='rec_button'>Back</div>
+                </a>
+            </div>
+        </div>
+    </div>  
 
-    var num = 300,
-        base = 4,
-        dif = 12;
+    <div class="section" id="section3">
+        <div class="section-wrapper">
+                <div id="social">
 
-    var nodes = d3.range(num).map(function() { return {radius: Math.random() * dif + base }; }),
-        root = nodes[0],
-        color = ['#009cde', '#46c8b2', '#f5d800', '#ff8b22', '#ff6859', '#fc4d77'];
+                    <ul>
+                        <li>
+                            <a href="https://www.linkedin.com/in/mark-m-bajo/" class="btn-social btn-outline linkedin"><i class="fa fa-fw fa-linkedin"></i></a>
+                            <h6>LinkedIn</h6>
+                        </li>
+                        <li>
+                            <a href="https://github.com/mmbajo" class="btn-social btn-outline github"><i class="fa fa-fw fa-github"></i></a>
+                            <h6>Github</h6>
+                        </li>
+                    </ul>
+                
+                </div>
 
-    root.radius = 0;
-    root.fixed = true;
-    root.px = width/2;
-    root.py = height/2;
 
-    var force = d3.layout.force()
-        .gravity(0.015)
-        .charge(function(d, i) { return i ? 0 : - (height + width); })
-        .nodes(nodes)
-        .size([width, height]);
+            </div>
+        </div>
+    </div>
+</div>
 
-    force.start();
-
-    var canvas = d3.select("#background").append("canvas")
-        .attr("width", width)
-        .attr("height", height);
-
-    var context = canvas.node().getContext("2d");
-
-    force.on("tick", function(e) {
-    var q = d3.geom.quadtree(nodes),
-        i,
-        d,
-        n = nodes.length;
-
-    for (i = 1; i < n; ++i) q.visit(collide(nodes[i]));
-
-    context.clearRect(0, 0, width, height);
-    force.size([width, height]);
-    for (i = 1; i < n; ++i) {
-        context.fillStyle = color[i % color.length];
-        context.globalAlpha = 0.6;
-        d = nodes[i];
-        context.moveTo(d.x, d.y);
-        context.beginPath();
-        context.arc(d.x, d.y, d.radius, 0, 2 * Math.PI);
-        context.fill();
-    }
-    });
-
-    canvas.on("mousemove", move);
-    canvas.on("touchmove", move);
-
-    function move() {
-    var p1 = d3.mouse(this);
-    root.px = p1[0];
-    root.py = p1[1];
-    force.resume();
-    };
-
-    function collide(node) {
-    var r = node.radius + 16,
-        nx1 = node.x - r,
-        nx2 = node.x + r,
-        ny1 = node.y - r,
-        ny2 = node.y + r;
-    return function(quad, x1, y1, x2, y2) {
-        if (quad.point && (quad.point !== node)) {
-        var x = node.x - quad.point.x,
-            y = node.y - quad.point.y,
-            l = Math.sqrt(x * x + y * y),
-            r = node.radius + quad.point.radius + 7;
-        if (l < r) {
-            l = (l - r) / l * .5;
-            node.x -= x *= l;
-            node.y -= y *= l;
-            quad.point.x += x;
-            quad.point.y += y;
-        }
-        }
-        return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-    };
-    }
-
-    $(window).on("resize", function () {
-    width = d3.select("#background").node().clientWidth,
-    height = d3.select("#background").node().clientHeight;
-    canvas.attr("width", width).attr("height", height);
-    force.start();
-    });
-    </script>
-</section>
 </body>
+
+<script src="d3/d3.min.js"></script>
+<script>
+//Home Page Graphic
+//adapted from https://bl.ocks.org/mbostock/3231307
+
+var width = d3.select("#background").node().clientWidth,
+    height = d3.select("#background").node().clientHeight;
+
+var num = 600,
+    base = 4,
+    dif = 12;
+
+var nodes = d3.range(num).map(function() { return {radius: Math.random() * dif + base }; }),
+    root = nodes[0],
+    color = ['#BC85A3', '#9799ba', '#89AeB2', '#FEADB9', '#F9E1E0', '#fc4d77'];
+
+root.radius = 0;
+root.fixed = true;
+root.px = width/2;
+root.py = height/2;
+
+var force = d3.layout.force()
+    .gravity(0.015)
+    .charge(function(d, i) { return i ? 0 : - (height + width); })
+    .nodes(nodes)
+    .size([width, height]);
+
+force.start();
+
+var canvas = d3.select("#background").append("canvas")
+    .attr("width", width)
+    .attr("height", height);
+
+var context = canvas.node().getContext("2d");
+
+force.on("tick", function(e) {
+var q = d3.geom.quadtree(nodes),
+    i,
+    d,
+    n = nodes.length;
+
+for (i = 1; i < n; ++i) q.visit(collide(nodes[i]));
+
+context.clearRect(0, 0, width, height);
+force.size([width, height]);
+for (i = 1; i < n; ++i) {
+    context.fillStyle = color[i % color.length];
+    context.globalAlpha = 0.6;
+    d = nodes[i];
+    context.moveTo(d.x, d.y);
+    context.beginPath();
+    context.arc(d.x, d.y, d.radius, 0, 2 * Math.PI);
+    context.fill();
+}
+});
+
+canvas.on("mousemove", move);
+canvas.on("touchmove", move);
+
+function move() {
+var p1 = d3.mouse(this);
+root.px = p1[0];
+root.py = p1[1];
+force.resume();
+};
+
+function collide(node) {
+var r = node.radius + 16,
+    nx1 = node.x - r,
+    nx2 = node.x + r,
+    ny1 = node.y - r,
+    ny2 = node.y + r;
+return function(quad, x1, y1, x2, y2) {
+    if (quad.point && (quad.point !== node)) {
+    var x = node.x - quad.point.x,
+        y = node.y - quad.point.y,
+        l = Math.sqrt(x * x + y * y),
+        r = node.radius + quad.point.radius + 7;
+    if (l < r) {
+        l = (l - r) / l * .5;
+        node.x -= x *= l;
+        node.y -= y *= l;
+        quad.point.x += x;
+        quad.point.y += y;
+    }
+    }
+    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+};
+}
+
+$(window).on("resize", function () {
+width = d3.select("#background").node().clientWidth,
+height = d3.select("#background").node().clientHeight;
+canvas.attr("width", width).attr("height", height);
+force.start();
+});
+</script>
+</section>
 </html>
